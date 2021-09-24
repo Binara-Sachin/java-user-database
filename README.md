@@ -14,6 +14,8 @@ Tasks Given
 
 Functions Breakdown
   1. Create Maven Project <-- DONE
-  2. Connect to MySQL Database
-  3. Access "User-data" table
-  4. Add Functions to Register, Login and View Users
+  2. Connect to MySQL Database <-- DONE
+  3. Access "User-data" table <-- DONE
+  4. Add Functions to Register, Login and View Users <-- DONE
+  5. Setup Loop
+  6. Handle Exceptions

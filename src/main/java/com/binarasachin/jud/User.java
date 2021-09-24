@@ -30,6 +30,6 @@ public class User {
     }
 
     public void printUserData(){
-        System.out.println(username + "\t" + email);
+        System.out.println("\t" + username + "\t" + email);
     }
 }

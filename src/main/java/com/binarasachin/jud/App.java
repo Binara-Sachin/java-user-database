@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class App {
-    final static DatabaseManager databaseManager = new DatabaseManager();
+    static DatabaseManager databaseManager = new DatabaseManager();
     static int state = 0;
 
     public static void main( String[] args ) throws SQLException {
@@ -58,11 +58,15 @@ public class App {
     }
 
     private static void printUserList(){
-        List<User> userList = databaseManager.getAllUsers();
+        try {
+            List<User> userList = databaseManager.getAllUsers();
 
-        System.out.println("\nCurrently Registered Users");
-        for (User user : userList) {
-            user.printUserData();
+            System.out.println("\nCurrently Registered Users");
+            for (User user : userList) {
+                user.printUserData();
+            }
+        } catch (Exception e) {
+            System.out.println("Error - Could not show registered users");
         }
     }
 
@@ -73,10 +77,14 @@ public class App {
         System.out.print("Password : ");
         String password  = scanner.nextLine();
         
-        int loginResponse = databaseManager.loginUser(username, password);
+        try {
+            int loginResponse = databaseManager.loginUser(username, password);
 
-        if (loginResponse == 200) {
-            state = 1;
+            if (loginResponse == 200) {
+                state = 1;
+            }
+        } catch (Exception e) {
+            System.out.println("Error - Could not Log in");
         }
     }
 
@@ -91,14 +99,46 @@ public class App {
         String username  = scanner.nextLine();
         System.out.print("Password : ");
         String password  = scanner.nextLine();
+        System.out.print("Confirm Password : ");
+        String confirmPassword  = scanner.nextLine();
         System.out.print("Email : ");
         String email  = scanner.nextLine();
 
-        User newUser = new User(username, password, email);
+        if (validateData(username, password, confirmPassword, email)) {
+            User newUser = new User(username, password, email);
 
-        databaseManager.registerUser(newUser);
+            try {
+                databaseManager.registerUser(newUser);
+            } catch (Exception e) {
+                System.out.println("Error - Could not register the new user");
+            }
+        }
 
+        
+    }
 
+    private static boolean validateData(String username, String password, String confirmPassword, String email){
+        if (username.isBlank()) {
+            System.out.println("Error - Username cannot be blank");
+            return false;
+        }
+        if (password.isBlank()) {
+            System.out.println("Error - Password cannot be blank");
+            return false;
+        }
+        if (password.length() < 6 || password.length() > 16) {
+            System.out.println("Error - Password length should be between 6-16 characters");
+            return false;
+        }
+        if (!password.equals(confirmPassword)) {
+            System.out.println("Error - Passwords does not match");
+            return false;
+        }
+        if (email.isBlank()) {
+            System.out.println("Error - Email cannot be blank");
+            return false;
+        }
+        return true;
     }
 
 

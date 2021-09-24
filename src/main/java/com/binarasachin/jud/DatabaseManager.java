@@ -32,7 +32,7 @@ public class DatabaseManager{
         try {
             connection = DriverManager.getConnection(url, username, password);
         } catch (SQLException e) {
-            e.printStackTrace();
+            printSQLException(e);
         }
 
         return connection;
@@ -105,19 +105,41 @@ public class DatabaseManager{
         } 
     }
 
-    private void printSQLException(SQLException ex) {
-        for (Throwable e: ex) {
-            if (e instanceof SQLException) {
-                e.printStackTrace(System.err);
-                System.err.println("SQLState: " + ((SQLException) e).getSQLState());
-                System.err.println("Error Code: " + ((SQLException) e).getErrorCode());
-                System.err.println("Message: " + e.getMessage());
-                Throwable t = ex.getCause();
-                while (t != null) {
-                    System.out.println("Cause: " + t);
-                    t = t.getCause();
+    private void printSQLException(SQLException exception) {
+        switch (exception.getErrorCode()) {
+            case 1064:
+                System.out.println("SQL Code Error - Wrong syntax");
+                break;
+            case 1054:
+                System.out.println("SQL Code Error - Requested column does not exist");
+                break;
+            case 1146:
+                System.out.println("SQL Code Error - Requested table does not exist");
+                break;
+            case 1062:
+                if (exception.getMessage().contains("users.username")) {
+                    System.out.println("Username already exists. Please select a different username");
                 }
-            }
+                else if (exception.getMessage().contains("users.email")) {
+                    System.out.println("Email already exists. Use another Email or use Login");
+                }
+                break;
+            default:
+                for (Throwable e: exception) {
+                    if (e instanceof SQLException) {
+                        // e.printStackTrace(System.err);
+                        System.out.println("Something went wrong. Please Try Again");
+                        System.err.println("SQLState: " + ((SQLException) e).getSQLState());
+                        System.err.println("Error Code: " + ((SQLException) e).getErrorCode());
+                        System.err.println("Message: " + e.getMessage());
+                        Throwable t = exception.getCause();
+                        while (t != null) {
+                            System.out.println("Cause: " + t);
+                            t = t.getCause();
+                        }
+                    }
+                }
+                break;
         }
     }
 }

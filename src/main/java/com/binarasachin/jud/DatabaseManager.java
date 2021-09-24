@@ -17,8 +17,8 @@ public class DatabaseManager{
 
     //Statement Strings
     private static final String QUARRY_ALL_USERS_STRING = "SELECT * FROM users";
-    private static final String QUARRY_USER_BY_USERNAME_STRING = "SELECT password FROM users WHERE username =?";
-    private static final String REGISTER_USER_STRING = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+    private static final String QUARRY_USER_BY_USERNAME_STRING = "SELECT passwrd FROM users WHERE username =?";
+    private static final String REGISTER_USER_STRING = "INSERT INTO users (username, passwrd, email) VALUES (?, ?, ?)";
 
     protected Connection getConnection() {
         try {
@@ -69,12 +69,13 @@ public class DatabaseManager{
 
             statement.executeUpdate();
 
+            System.out.println("Successfully Created a New User");
         } catch (SQLException e) {
             printSQLException(e);
         }
     }
 
-    public void loginUser(String username, String password){
+    public int loginUser(String username, String password){
         try {
             Connection connection = getConnection();
 
@@ -82,14 +83,26 @@ public class DatabaseManager{
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
 
-            if (password == resultSet.getString("password")) {
-                System.out.println("Login Successful");
+            if (!resultSet.isBeforeFirst()) {
+                System.out.println("Invalid username");
+                return 201;
             } else {
-                System.out.println("Login Failed");
+                resultSet.next();
+                String userPassword = resultSet.getString("passwrd");
+
+                if (password.equals(userPassword)) {
+                    System.out.println("Login Successful");
+                    return 200;
+                } else {
+                    System.out.println("Invalid Password " + userPassword);
+                    return 202;
+                }
             }
+
         } catch (SQLException e) {
             printSQLException(e);
-        }
+            return 209;
+        } 
     }
 
     private void printSQLException(SQLException ex) {

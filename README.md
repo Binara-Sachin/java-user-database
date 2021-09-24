@@ -17,5 +17,5 @@ Functions Breakdown
   2. Connect to MySQL Database <-- DONE
   3. Access "User-data" table <-- DONE
   4. Add Functions to Register, Login and View Users <-- DONE
-  5. Setup Loop
+  5. Setup Loop <-- DONE
   6. Handle Exceptions

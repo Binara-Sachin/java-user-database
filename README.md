@@ -12,10 +12,11 @@ Tasks Given
   9. If it's a iser list action, check if a login has been succeeded previously and list all users.
   10. You can stick to a simple standalone command line application, no need for webapps.
 
-Functions Breakdown
+Tasks Breakdown
   1. Create Maven Project <-- DONE
   2. Connect to MySQL Database <-- DONE
   3. Access "User-data" table <-- DONE
   4. Add Functions to Register, Login and View Users <-- DONE
   5. Setup Loop <-- DONE
-  6. Handle Exceptions
+  6. Handle Exceptions  <--DONE
+  7. Comments and Code Verification <--DONE

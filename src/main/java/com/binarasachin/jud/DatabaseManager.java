@@ -15,11 +15,12 @@ public class DatabaseManager{
     private String username = "root";
     private String password = "12345";
 
-    //Statement Strings
+    //MySQL Statement Strings
     private static final String QUARRY_ALL_USERS_STRING = "SELECT * FROM users";
     private static final String QUARRY_USER_BY_USERNAME_STRING = "SELECT passwrd FROM users WHERE username =?";
     private static final String REGISTER_USER_STRING = "INSERT INTO users (username, passwrd, email) VALUES (?, ?, ?)";
 
+    //Make the connection
     protected Connection getConnection() {
         try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -38,6 +39,7 @@ public class DatabaseManager{
         return connection;
     }
 
+    //Quarry All Users from database
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<User>();
 
@@ -58,6 +60,7 @@ public class DatabaseManager{
         return userList;
     }
 
+    //Add new user to database
     public void registerUser(User user){
         try {
             Connection connection = getConnection(); 
@@ -75,6 +78,7 @@ public class DatabaseManager{
         }
     }
 
+    //Login user
     public int loginUser(String username, String password){
         try {
             Connection connection = getConnection();
@@ -105,18 +109,19 @@ public class DatabaseManager{
         } 
     }
 
+    //Print Exceptions
     private void printSQLException(SQLException exception) {
         switch (exception.getErrorCode()) {
-            case 1064:
+            case 1064:  //Check 'Statement Strings' for SQL syntax errors
                 System.out.println("SQL Code Error - Wrong syntax");
                 break;
-            case 1054:
+            case 1054:  //Database columns should be 'username', 'passwrd', 'email'
                 System.out.println("SQL Code Error - Requested column does not exist");
                 break;
-            case 1146:
+            case 1146:  //Table name should be 'Users'
                 System.out.println("SQL Code Error - Requested table does not exist");
                 break;
-            case 1062:
+            case 1062:  //Username and email are set to be unique fields in SQL table.
                 if (exception.getMessage().contains("users.username")) {
                     System.out.println("Username already exists. Please select a different username");
                 }
@@ -124,7 +129,7 @@ public class DatabaseManager{
                     System.out.println("Email already exists. Use another Email or use Login");
                 }
                 break;
-            default:
+            default:    //Other error messages
                 for (Throwable e: exception) {
                     if (e instanceof SQLException) {
                         // e.printStackTrace(System.err);

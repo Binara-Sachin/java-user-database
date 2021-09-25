@@ -6,11 +6,16 @@ import java.util.Scanner;
 
 public class App {
     static DatabaseManager databaseManager = new DatabaseManager();
+
+    //App State
+    //  0 - Not Logged In
+    //  1 - Logged In
     static int state = 0;
 
     public static void main( String[] args ) throws SQLException {
         Scanner scanner = new Scanner(System.in);
 
+        //Main Logic
         Loop : while (true) {
             switch (state) {
                 case 0:
@@ -57,6 +62,7 @@ public class App {
         }
     }
 
+    //Print the list of available users
     private static void printUserList(){
         try {
             List<User> userList = databaseManager.getAllUsers();
@@ -70,6 +76,7 @@ public class App {
         }
     }
 
+    //Login an existing user
     private static void loginUser(){
         Scanner scanner = new Scanner(System.in);
         System.out.print("Username : ");
@@ -88,11 +95,13 @@ public class App {
         }
     }
 
+    //Log out user
     private static void logoutUser(){
         state = 0;
-        System.out.print("Successfully Logged Out");
+        System.out.println("Successfully Logged Out");
     }
 
+    //Register a new user
     private static void registerUser(){
         Scanner scanner = new Scanner(System.in);
         System.out.print("Username : ");
@@ -117,28 +126,28 @@ public class App {
         
     }
 
+    //Validating Username Password for minimum requirements
     private static boolean validateData(String username, String password, String confirmPassword, String email){
+        boolean validationSuccessful = true;
         if (username.isBlank()) {
             System.out.println("Error - Username cannot be blank");
-            return false;
+            validationSuccessful = false;
         }
-        if (password.isBlank()) {
-            System.out.println("Error - Password cannot be blank");
-            return false;
-        }
+        
         if (password.length() < 6 || password.length() > 16) {
             System.out.println("Error - Password length should be between 6-16 characters");
-            return false;
+            validationSuccessful = false;
         }
         if (!password.equals(confirmPassword)) {
             System.out.println("Error - Passwords does not match");
-            return false;
+            validationSuccessful = false;
         }
         if (email.isBlank()) {
             System.out.println("Error - Email cannot be blank");
-            return false;
+            validationSuccessful = false;
         }
-        return true;
+        
+        return validationSuccessful;
     }
 
 

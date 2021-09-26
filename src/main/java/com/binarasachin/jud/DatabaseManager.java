@@ -21,7 +21,7 @@ public class DatabaseManager{
     private static final String REGISTER_USER_STRING = "INSERT INTO users (username, passwrd, email) VALUES (?, ?, ?)";
 
     //Make the connection
-    protected Connection getConnection() {
+    private Connection getConnection() {
         try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {

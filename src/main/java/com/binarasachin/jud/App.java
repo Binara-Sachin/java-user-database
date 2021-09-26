@@ -3,6 +3,8 @@ package com.binarasachin.jud;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class App {
     static DatabaseManager databaseManager = new DatabaseManager();
@@ -121,9 +123,7 @@ public class App {
             } catch (Exception e) {
                 System.out.println("Error - Could not register the new user");
             }
-        }
-
-        
+        }   
     }
 
     //Validating Username Password for minimum requirements
@@ -146,9 +146,19 @@ public class App {
             System.out.println("Error - Email cannot be blank");
             validationSuccessful = false;
         }
+        if (!validateEmail(email)) {
+            System.out.println("Error - Email address not valid");
+            validationSuccessful = false;
+        }
+        
         
         return validationSuccessful;
     }
 
+    private static boolean validateEmail(String email) {
+        Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
+        return matcher.find();
+    }
 }
